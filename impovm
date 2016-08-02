@@ -1,0 +1,81 @@
+#!/bin/sh
+
+set -e -u
+
+if [ $# -eq 0 ]
+then
+    printf 'usage: %s <image>\n' "$0" >&2
+    exit 1
+fi
+
+image=$1
+shift
+
+if [ "$image" = tmp ]
+then
+    image=$(mktemp tmpqemu.XXXXXXXX)
+    trap 'rm -f "$image"' EXIT
+    rsync --sparse -P base.qemu "$image"
+elif [ ! -e "$image" ]
+then
+    rsync --sparse -P base.qemu "$image"
+fi
+
+image_dir="$(dirname "$image")"
+[ "$image_dir" = . ]
+image_base="$(basename "$image" .qemu)"
+screen_name="vm-$(basename "$image" .qemu)"
+
+cpu=host
+smp=$(nproc)
+mem=576M
+vga=virtio
+display=curses
+soundhw=
+disk_if=virtio
+nic_model=virtio
+rtc='base=utc'
+ssh_port=
+storage_type=virtio
+
+if [ -f options ]
+then
+    . ./options
+fi
+if [ -f "${image_base}.options" ]
+then
+    . "./${image_base}.options"
+fi
+
+if [ -n "$ssh_port" ]
+then
+    set -- -redir "tcp:$ssh_port::22" "$@"
+fi
+if [ -d storage/ ]
+then
+    if [ "$storage_type" = virtio ]
+    then
+        set -- -virtfs local,path=storage/,mount_tag=storage,security_model=mapped "$@"
+    elif [ "$storage_type" = fat ]
+    then
+        set -- -drive file=fat:storage/,index=1
+    else
+        printf '%s: invalid storage_type: %s' "$0" "$storage_type"
+    fi
+fi
+
+screen -S "$screen_name" \
+qemu \
+    -drive "file=$image,index=0,if=$disk_if,media=disk,cache=writeback,discard=unmap" \
+    -nodefaults \
+    -cpu "$cpu" \
+    -smp "$smp" \
+    -m "$mem" \
+    -vga "$vga" \
+    -display "$display" \
+    -soundhw "$soundhw" \
+    -net 'nic,model='$nic_model -net user \
+    -rtc "$rtc" \
+    "$@"
+
+# vim:ts=4 sts=4 sw=4 et
