@@ -85,7 +85,7 @@ then
 fi
 
 screen -S "$screen_name" \
-qemu \
+qemu-system-x86_64 \
     -drive "file=$image,index=0,if=$disk_if,media=disk,cache=writeback,discard=unmap" \
     -nodefaults \
     -cpu "$cpu" \
