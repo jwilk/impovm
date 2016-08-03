@@ -67,9 +67,10 @@ then
     . "./${image_base}.options"
 fi
 
+usernet=user
 if [ -n "$ssh_port" ]
 then
-    set -- -redir "tcp:$ssh_port::22" "$@"
+    usernet="$usernet,hostfwd=tcp:127.0.0.1:$ssh_port-:22"
 fi
 if [ -d storage/ ]
 then
@@ -94,7 +95,7 @@ qemu-system-x86_64 \
     -vga "$vga" \
     -display "$display" \
     -soundhw "$soundhw" \
-    -net 'nic,model='$nic_model -net user \
+    -net 'nic,model='$nic_model -net "$usernet" \
     -rtc "$rtc" \
     "$@"
 
