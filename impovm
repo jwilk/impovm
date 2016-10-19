@@ -79,7 +79,7 @@ then
         set -- -virtfs local,path=storage/,mount_tag=storage,security_model=mapped "$@"
     elif [ "$storage_type" = fat ]
     then
-        set -- -drive file=fat:storage/,index=1
+        set -- -drive file=fat:storage/,index=1 "$@"
     else
         printf '%s: invalid storage_type: %s' "$0" "$storage_type"
     fi
