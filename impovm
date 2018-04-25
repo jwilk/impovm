@@ -31,7 +31,7 @@ screen_name="vm-$(basename "$image" .qemu)"
 
 cpu=host
 smp=$(nproc)
-mem=576M
+mem=1G
 vga=virtio
 display=curses
 soundhw=
