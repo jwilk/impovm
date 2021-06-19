@@ -2,10 +2,14 @@
 set -e -u
 for img in "$@"
 do
+    du=$(du -sh -- "$img")
+    printf '%s: %s ... ' "$img" "${du%'	'*}" >&2
     sudo losetup -P /dev/loop7 "$img"
     sudo zerofree /dev/loop7p1
     sudo losetup -d /dev/loop7
     fallocate -d "$img"
+    du=$(du -sh -- "$img")
+    printf '%s\n' "${du%'	'*}" >&2
 done
 
 # vim:ts=4 sts=4 sw=4 et
