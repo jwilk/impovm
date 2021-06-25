@@ -3,6 +3,7 @@ set -e -u
 for img in "$@"
 do
     du=$(du -sh -- "$img")
+    sudo -v
     printf '%s: %s ... ' "$img" "${du%'	'*}" >&2
     sudo losetup -P /dev/loop7 "$img"
     sudo zerofree /dev/loop7p1
