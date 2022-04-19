@@ -7,7 +7,7 @@ set -e -u
 
 if [ $# -eq 0 ]
 then
-    printf 'usage: %s <image>\n' "$0" >&2
+    printf 'Usage: %s IMAGE\n' "$0" >&2
     exit 1
 fi
 
