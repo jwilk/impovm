@@ -34,7 +34,6 @@ smp=$(nproc)
 mem=1G
 vga=virtio
 display=curses
-soundhw=
 disk_if=virtio
 nic_model=virtio
 rtc='base=utc'
@@ -77,7 +76,6 @@ qemu-system-x86_64 \
     -m "$mem" \
     -vga "$vga" \
     -display "$display" \
-    -soundhw "$soundhw" \
     -net 'nic,model='$nic_model -net "$usernet" \
     -rtc "$rtc" \
     -object rng-random,filename=/dev/urandom,id=rng0 \
