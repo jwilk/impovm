@@ -27,7 +27,7 @@ fi
 image_dir="$(dirname "$image")"
 [ "$image_dir" = . ]
 image_base="$(basename "$image" .qemu)"
-screen_name="vm-$(basename "$image" .qemu)"
+session_name="vm-$(basename "$image" .qemu)"
 
 cpu=host
 smp=$(nproc)
@@ -67,7 +67,7 @@ then
     fi
 fi
 
-screen -S "$screen_name" \
+tmux new-session -s "$session_name" \
 qemu-system-x86_64 \
     -drive "file=$image,index=0,if=$disk_if,media=disk,discard=unmap" \
     -nodefaults \
