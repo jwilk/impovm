@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# Copyright © 2019-2024 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
 set -e -u
 for img in "$@"
 do
