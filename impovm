@@ -18,10 +18,10 @@ if [ "$image" = tmp ]
 then
     image=$(mktemp tmpqemu.XXXXXXXX)
     trap 'rm -f "$image"' EXIT
-    rsync -L --sparse -P base.qemu "$image"
+    cp -L --sparse=always base.qemu "$image"
 elif [ ! -e "$image" ]
 then
-    rsync -L --sparse -P base.qemu "$image"
+    cp -L --sparse=always base.qemu "$image"
 fi
 
 image_dir="$(dirname "$image")"
